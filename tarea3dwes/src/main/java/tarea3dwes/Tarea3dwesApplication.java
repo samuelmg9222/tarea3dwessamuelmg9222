@@ -1,4 +1,4 @@
-package tarea3dwessamuelmg922.tarea3dwes;
+package tarea3dwes;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
