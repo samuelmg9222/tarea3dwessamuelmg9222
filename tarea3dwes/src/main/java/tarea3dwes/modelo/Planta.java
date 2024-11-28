@@ -37,6 +37,16 @@ public class Planta implements Serializable{
 	@JoinColumn(name="idplanta")
 	private List<Ejemplar> ejemplares=new LinkedList<Ejemplar>();
 	
+	public Planta(Long id, String codigo, String nombrecomun, String nombrecientifico, List<Ejemplar> ejemplares) {
+		super();
+		this.id = id;
+		this.codigo = codigo;
+		this.nombrecomun = nombrecomun;
+		this.nombrecientifico = nombrecientifico;
+		this.ejemplares = ejemplares;
+	}
+
+
 	public Planta() {
 		super();
 	}

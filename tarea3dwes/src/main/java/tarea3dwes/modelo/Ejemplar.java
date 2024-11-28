@@ -34,7 +34,8 @@ public class Ejemplar implements Serializable{
 	@JoinColumn(name="idejemplar")
 	private List<Mensaje> mensjaes=new LinkedList<Mensaje>();
 	
-	
+	 @OneToMany(mappedBy = "ejemplar", cascade = CascadeType.ALL)
+	    private List<Seguimiento> seguimientos;
 	
 	
 	

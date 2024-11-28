@@ -19,5 +19,20 @@ public interface PlantaRepository extends JpaRepository <Planta,Long> {
 		
 		return false;
 	}
+
+	Planta findByCodigo(String codigo);
+
+	
+
+	
+
+	
+
+
+
+	
+	
+	
+	
 }
                                    
