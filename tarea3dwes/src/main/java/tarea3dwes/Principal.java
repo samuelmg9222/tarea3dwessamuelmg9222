@@ -18,11 +18,14 @@ public class Principal implements CommandLineRunner {
 	
 	@Override
 	public void run(String... args) throws Exception {
+		
 		System.out.println("INI");
 		Planta p =new Planta();
 		
 		
-		
+		if(!servplant.validarPl(p)) {
+			System.out.println("El codigo ya existe");
+		}
 		System.out.println("--------------");
 		
 		

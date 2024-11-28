@@ -14,7 +14,15 @@ public class ServiciosPlanta {
 	
 	
 	
-	public boolean validarplanta(Planta p) {
-		return true;
+	
+	
+	public void insertarPlanta(Planta p) {
+		plantarepos.saveAndFlush(p);
 	}
+	
+	public boolean validarPl(Planta p) {
+		if(plantarepos.existeCodigo(p)) return true;
+	
+	return false;
+}
 }
