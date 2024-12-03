@@ -1,9 +1,11 @@
 package tarea3dwes.servicios;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import tarea3dwes.modelo.Planta;
@@ -29,9 +31,17 @@ public class ServiciosMensaje {
 		    
 		  
     }
-	public void insertarMensaje(Mensaje m) {
-		mensajerepos.saveAndFlush(m);
+	public boolean insertarMensaje(Mensaje m) {
+	    try {
+	        mensajerepos.saveAndFlush(m);
+	        return true;
+	    } catch (DataIntegrityViolationException e) {
+	        
+	        return false;
+	    }
 	}
-	
+	public List<Mensaje> filtrarMensajePorEjemplar(Ejemplar ej){
+		return mensajerepos.findByEjemplar(ej);
+	}
 	
 }

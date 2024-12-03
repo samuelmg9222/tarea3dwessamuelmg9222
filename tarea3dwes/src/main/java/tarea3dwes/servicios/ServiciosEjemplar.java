@@ -47,8 +47,16 @@ public class ServiciosEjemplar {
 			return 1;
 		}
 	  
-	  
-
+	  public List<Ejemplar> verEjemplares() {
+return ejemplarrepos.findAll();
 	
 
+
+}
+	  
+	  public boolean existeEjemplar(Long i) {
+		 if(ejemplarrepos.findById(i)==null)return false;
+		 else return true;
+		  
+	  }
 }

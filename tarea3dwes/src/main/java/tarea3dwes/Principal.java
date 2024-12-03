@@ -345,8 +345,8 @@ public class Principal implements CommandLineRunner {
 								break;
 							}
 							  String codigoPlanta = plantas.get(ind - 1).getCodigo();
-							    Planta planta = servplant.obtenerPlantaPorCodigo(codigoPlanta);
-							    String nombreEjemplar = servejemplar.generarNombreEjemplar(planta.getNombrecomun());
+							    Planta planta = plantas.get(ind - 1);
+							    String nombreEjemplar = servejemplar.generarNombreEjemplar(planta.getCodigo());
 							    Ejemplar ejemplar = new Ejemplar(nombreEjemplar, planta);
 							    LocalDateTime fechaH = LocalDateTime.now();
 							   Mensaje mensaje =new Mensaje(fechaH,servmensaje.generarMensaje(persona.getId(), fechaH),persona,ejemplar);
@@ -433,9 +433,16 @@ public class Principal implements CommandLineRunner {
 				                            if (opc.equals("N")) {
 				                                break;
 				                            }
+				                            
 				                        } else {
 				                            System.out.println("Código no válido");
 				                        }
+				                        
+				                        if (indice.equals("9999")) {
+					                        break;
+					                    }
+				                        
+				                        
 				                    } else if(servplant.procesarCodigo(pl.get(indicePlanta - 1).getCodigo(), codigos)==1){
 				                        System.out.println("Ese codigo ya lo has introducido");
 				                    }else if(servplant.procesarCodigo(pl.get(indicePlanta - 1).getCodigo(), codigos)==2){
@@ -447,28 +454,151 @@ public class Principal implements CommandLineRunner {
 				                } catch (Exception e) {
 				                    System.out.println(e.getMessage());
 				                }
+				                
 				            } while (true);
-				            if (indice.equals("9999")) {
-		                        break;
-		                    }
+				           
 				            if (!codigos.isEmpty()) {
 				                for (String c : codigos) {
 				                    List<Ejemplar> ejemplares = new ArrayList<Ejemplar>();
+				                    ejemplares=servejemplar.verEjemplares();
+				                    plantas = servplant.verPlantas();
+				                    for(Planta pln:plantas) {
+				                    	if(pln.getCodigo().equals(c)){
+
+				                    
 				                    if (ejemplares.isEmpty()) {
 				                        System.out.println("\nLa planta con código " + c + " se encuentra sin ejemplares");
 				                    } else {
 				                        System.out.println("\nEjemplares con código de planta " + c + ":");
 				                        for (Ejemplar ejmp : ejemplares) {
-				                            System.out.println(ejmp);
+				                            System.out.println(ejmp.getId()+" "+ejmp.getNombre());
 				                        }
 				                    }
-				                }
+				                }}
 				            }
-				            
+				            }  
 				        } while(indicePlanta == 9999);
 				        break;
 				    
+				    case 3:
+				    	Long idEjem = 0L;
+				    	Ejemplar Ejemp=new Ejemplar();
+						String indc,idEjemStr = "";
+						int j = 1;
+						int opc = 0;
+						List<Ejemplar> ejemplares = new ArrayList<Ejemplar>();
+						List<Mensaje> mensajesAsociados = new ArrayList<Mensaje>();
+						if (servejemplar.verEjemplares() != null && !servejemplar.verEjemplares().isEmpty()) {
 
+							ejemplares = servejemplar.verEjemplares();
+							for (Ejemplar c : ejemplares) {
+								System.out.println(j + ".   nombre: " + c.getNombre());
+								j++;
+							}
+
+							System.out.println("\nDame un indice (NUMERO DE LISTA) para ver mensajes asociados a ese ejemplar: (9999 para salir)");
+							indc = in.nextLine().trim();
+							 if(indc.equals("9999")) {
+								 break;
+							 }
+
+							try {
+								opc = Integer.parseInt(indc);
+								 Ejemp=ejemplares.get(opc-1);
+								idEjem = ejemplares.get(opc - 1).getId();
+								idEjemStr = ejemplares.get(opc - 1).getId().toString();
+							} catch (Exception e) {
+								if(opc!=9999) {
+								System.out.println("Error: el indice debe de ser un numero y dentro del rango");
+								continue;
+							}
+							}
+
+							if (servejemplar.existeEjemplar(idEjem)) {
+								try {
+									if (servmensaje.filtrarMensajePorEjemplar(Ejemp) == null
+											||! servmensaje.filtrarMensajePorEjemplar(Ejemp).isEmpty()) {
+
+										System.out.println("Ese ejemplar no tiene mensajes asociados");
+									} else {
+										mensajesAsociados = servmensaje.filtrarMensajePorEjemplar(Ejemp);
+										System.out.println("Mensajes asociados encontrados: " + mensajesAsociados.size());
+										for (Mensaje m : mensajesAsociados) {
+											System.out.println(m.getMensaje());
+										}
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							} else
+								System.out.println("Codigo no valido");
+						
+						
+						}else {System.out.println("No se han encontrado ejemplares");}
+						
+						
+						 
+						break;
+						
+				    case 4:
+				    	Long idEjempl=-3L;
+				    	String idEjemStr2="";
+						String codigoEjemplar;
+						Ejemplar ejmpl=new Ejemplar();
+						List<Ejemplar> ejemplares2 = new ArrayList<Ejemplar>();
+						int k = 1;
+						int indiceCodEj = 0;
+						if (servejemplar.verEjemplares() != null
+								&& !servejemplar.verEjemplares().isEmpty()) {
+
+							ejemplares2 = servejemplar.verEjemplares();
+							for (Ejemplar c : ejemplares2) {
+								System.out.println(k + ".  id: " + c.getId() + "  nombre: " + c.getNombre());
+								k++;
+							}
+
+							System.out.println("\nDame un indice (NUMERO DE LISTA) para ver crear un mensaje asociado a ese ejemplar: (9999 para salir)");
+						;
+						codigoEjemplar = in.nextLine().trim();
+		if(codigoEjemplar.equals("9999")) {
+			break;
+		}
+						try {
+							indiceCodEj=Integer.parseInt(codigoEjemplar);
+							idEjempl = ejemplares2.get(indiceCodEj - 1).getId();
+							 ejmpl = ejemplares2.get(indiceCodEj - 1);
+						}catch(Exception e) {
+							if(indiceCodEj!=9999) {
+								System.out.println("Error: el indice debe de ser un numero y dentro del rango");
+								continue;
+						}
+						}
+						try {
+						if (servejemplar.existeEjemplar(idEjempl)) {
+							
+							Long idej = Long.parseLong(codigoEjemplar);
+							LocalDateTime h=LocalDateTime.now();
+							Mensaje ms = new Mensaje(h,servmensaje.generarMensaje(idej, h),persona,ejmpl);
+									
+							
+							if (servmensaje.insertarMensaje(ms)) {
+								System.out.println("Mensaje generado y almacenado con éxito: " + ms.getMensaje());
+							} else {
+								System.out.println("No se ha podido insertar el mensaje");
+												
+							}
+						} else
+							System.out.println("Codigo no valido");
+						}catch(Exception e) {
+							e.getMessage();
+							continue;
+						}
+
+
+							}else {System.out.println("No se han encontrado ejemplares");}
+						
+				    	
+				    	break;
 					case 99:
 						break;
 					default:
