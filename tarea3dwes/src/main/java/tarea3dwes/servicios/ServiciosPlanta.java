@@ -1,5 +1,6 @@
 package tarea3dwes.servicios;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,41 @@ public class ServiciosPlanta {
 		    plantarepos.saveAndFlush(plantaExistente);
 		}
 	  
+	  public Planta obtenerPlantaPorCodigo(String codigo) {
+	        return plantarepos.findByCodigo(codigo);
+	    }
+	  
+	  
+	  
+	  
+	  public int procesarCodigo(String codigo,ArrayList<String> cods) {
+			
+		    if (cods.contains(codigo)) {
+		        
+		        return 1;
+		    } else if (plantarepos.existsByCodigo(codigo)) {
+		    	cods.add(codigo);
+		      
+		     
+		    	 
+		    }else {
+		    	
+		    	return 2;
+		}
+			return 3;
+		    
+		}
+	  
+	  
+	  public boolean existeCodigoPlanta(String c) {
+		if(plantarepos.findByCodigo(c)==null)  return false;
+		  
+		else return true;
+	  }
+	  
+	  
 	}
+
 		  
 	
 	  

@@ -43,6 +43,17 @@ public class Ejemplar implements Serializable{
 		super();
 	}
 
+	public Ejemplar(Long id, String nombre, Planta planta) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.planta = planta;
+	}
+	public Ejemplar(String nombre, Planta planta) {
+        this.nombre = nombre;
+        this.planta = planta;
+    }
+
 	public Long getId() {
 		return id;
 	}

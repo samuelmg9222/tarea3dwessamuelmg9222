@@ -22,6 +22,8 @@ public interface PlantaRepository extends JpaRepository <Planta,Long> {
 
 	Planta findByCodigo(String codigo);
 
+	boolean existsByCodigo(String codigo);
+
 	
 
 	

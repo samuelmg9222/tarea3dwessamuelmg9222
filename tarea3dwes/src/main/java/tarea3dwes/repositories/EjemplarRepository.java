@@ -9,4 +9,6 @@ import tarea3dwes.modelo.Ejemplar;
 @Repository
 public interface EjemplarRepository extends JpaRepository <Ejemplar,Long> {
 
+	int countByNombreStartingWith(String nombreComun);
+	
 }
