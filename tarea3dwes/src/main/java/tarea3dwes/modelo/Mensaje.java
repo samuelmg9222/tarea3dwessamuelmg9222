@@ -89,6 +89,11 @@ private static final long serialVersionUID =1L;
 		return Objects.equals(ejemplar, other.ejemplar) && Objects.equals(fechahora, other.fechahora)
 				&& Objects.equals(mensaje, other.mensaje) && Objects.equals(persona, other.persona);
 	}
+	@Override
+	public String toString() {
+		return "Mensaje [id=" + id + ", fechahora=" + fechahora + ", mensaje=" + mensaje + ", idpersona=" + persona.getId()
+				+ ", idejemplar=" + ejemplar.getId() + "]";
+	}
 	
 	
 }

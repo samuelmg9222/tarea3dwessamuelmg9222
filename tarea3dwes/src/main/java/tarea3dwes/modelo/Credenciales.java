@@ -50,9 +50,9 @@ public class Credenciales implements Serializable{
 
 	
 
-		public Credenciales(Long id, String usuario, String password, Persona persona) {
+		public Credenciales(String usuario, String password, Persona persona) {
 			super();
-			this.id = id;
+			
 			this.usuario = usuario;
 			this.password = password;
 			this.persona = persona;

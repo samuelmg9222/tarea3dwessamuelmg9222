@@ -11,5 +11,5 @@ import tarea3dwes.modelo.Persona;
 public interface CredencialRepository extends JpaRepository <Credenciales,Long>{
 
 	Credenciales findByUsuario(String p);
-
+	boolean existsByUsuario(String usuario);
 }

@@ -45,9 +45,8 @@ public class Persona implements Serializable {
 		super();
 	}
 
-	public Persona(Long id, String nombre, String email) {
+	public Persona(String nombre, String email) {
 		super();
-		this.id = id;
 		this.nombre = nombre;
 		this.email = email;
 	}

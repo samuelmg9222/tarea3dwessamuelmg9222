@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
+import tarea3dwes.modelo.Ejemplar;
 import tarea3dwes.modelo.Persona;
 import tarea3dwes.modelo.Planta;
 
 
 public interface PersonaRepository extends JpaRepository <Persona,Long>{
-	
+	 boolean existsByEmail(String email);
 }

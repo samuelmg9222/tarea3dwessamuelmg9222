@@ -38,4 +38,8 @@ public class ServiciosCredencial {
 	        }
 	        return -1;
 	    }
+	   
+	   public boolean insertarCredenciales(Credenciales cr) {
+		    return credencialesRepository.saveAndFlush(cr) != null;
+		}
 }
