@@ -40,7 +40,7 @@ public class Principal implements CommandLineRunner {
 	    
 		mostrarMenuPrincipal();
 		}
-	
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 	Persona persona;
 	String username;
 		 public void mostrarMenuPrincipal() {
@@ -122,7 +122,7 @@ public class Principal implements CommandLineRunner {
 		            System.out.println("\t1 - Visualizar plantas\n");
 		            System.out.println("\t2 - Insertar planta\n");
 		            System.out.println("\t3 - Modificar planta\n");
-		            System.out.println("\t99 - Salir de la aplicación\n");
+		            System.out.println("\t99 - Volver atrás\n");
 		            System.out.print("\tSelecciona una opción: ");
 		             opcionint = obtenerOpcionValida();
 
@@ -236,10 +236,10 @@ public class Principal implements CommandLineRunner {
 									System.out.println("Número fuera de rango del índice");
 									break;
 								case -2:
-									System.out.println("Nombre común no válido. Debe ser de 3 a 99 letras incluyendo espacios y sin tildes ni ñ");
+									System.out.println("Nombre común no válido. Debe ser de 3 a 99 letras incluyendo espacios (opcional) y sin tildes ni ñ");
 									break;
 								case -3:
-									System.out.println("Nombre científico no válido. Debe ser de 3 a 99 letras incluyendo espacios y sin tildes ni ñ");
+									System.out.println("Nombre científico no válido. Debe ser de 3 a 99 letras incluyendo espacios (opcional) y sin tildes ni ñ");
 									break;
 								case -4:
 									System.out.println("No se ha podido modificar nada ya que los datos son los mismos que los ya existentes");
@@ -257,14 +257,17 @@ public class Principal implements CommandLineRunner {
 						
 		                    break;
 		                case 99:
+		                	if(username.equals("ADMIN")) {
+		                		mostrarMenuAdmin();
+		                	}else
 		                    System.out.println("Volviendo...");
 		                    mostrarMenuPrincipal();
 		                    break;
-		                default:
-		                   // opcNoValida();
+		                    default:
+		                    System.out.println("Opción no válida.");
 		                    break;
 		            }
-		        } while (opcionint != 99);
+		        } while (true);
 		 }
 		 
 		 
@@ -295,7 +298,7 @@ public class Principal implements CommandLineRunner {
 		                	mostrarMenuGestionPersonas(persona.getId());
 		                    break;
 		                default:
-		                    
+		                
 		                    break;
 		            }
 		        } while (opcionIntAdmin != 99);
@@ -317,7 +320,7 @@ public class Principal implements CommandLineRunner {
 				    System.out.println("\t3. Ver mensajes para ejemplar .\n");
 				    System.out.println("\t4. Crear Mensaje.\n");
 				    System.out.println("\t5. Filtrar mensajes.\n");
-				    System.out.println("\t99. Volver al menú Principal\n");
+				    System.out.println("\t99. Volver al menú del administrador\n");
 
 				    opcion = in.nextLine().trim();
 				    if (!opcion.matches("\\d+")) { 
@@ -340,13 +343,13 @@ public class Principal implements CommandLineRunner {
 				    switch (opcionInt) {
 				    case 1:
 				    	List<Planta> plantas=new ArrayList<Planta>();
-	                	if(!servplant.verPlantas().isEmpty()){
+	                	if(!servplant.verPlantas().isEmpty() && servplant.verPlantas()!=null){
 		                 plantas = servplant.verPlantas();
-	                	
 		                 int i=1;
+		                 System.out.println(String.format("%-5s %-15s %-25s %-30s", "ID", "Código", "Nombre común", "Nombre científico"));
 	    				for (Planta pl : plantas) {
 							
-							System.out.println(i + ": " +pl.getCodigo()+"\t"+ pl.getNombrecomun() + "\t" + pl.getNombrecientifico());
+	    					System.out.println(String.format("%-5d %-15s %-25s %-30s", i, pl.getCodigo(), pl.getNombrecomun(), pl.getNombrecientifico()));
 							i++;
 						}
 	                	
@@ -354,7 +357,8 @@ public class Principal implements CommandLineRunner {
 	                	
 	                	}else {
 	                		System.out.println("La lista esta vacía");
-	                	break;}
+	                	break;
+	                	}
 	                	
 
 						try {
@@ -370,7 +374,8 @@ public class Principal implements CommandLineRunner {
 							    String nombreEjemplar = servejemplar.generarNombreEjemplar(planta.getCodigo());
 							    Ejemplar ejemplar = new Ejemplar(nombreEjemplar, planta);
 							    LocalDateTime fechaH = LocalDateTime.now();
-							   Mensaje mensaje =new Mensaje(fechaH,servmensaje.generarMensaje(persona.getId(), fechaH),persona,ejemplar);
+							    String fechaformated= fechaH.format(formatter);
+							   Mensaje mensaje =new Mensaje(fechaH,servmensaje.generarMensaje(persona.getId(), fechaformated),persona,ejemplar);
 							int resultado =servejemplar.verificarInsercion(codigoPlanta, plantas, ind);
 							    switch (resultado) {
 								case 1:
@@ -402,23 +407,23 @@ public class Principal implements CommandLineRunner {
 				        break;
 				    case 2:
 				        ArrayList<String> codigos = new ArrayList<>();
-				        List<Planta> pl = new ArrayList<Planta>();
-
-				       
-	                	if(!servplant.verPlantas().isEmpty()){
+				        List<Planta> pl=new ArrayList<Planta>();
+	                	if(!servplant.verPlantas().isEmpty() && servplant.verPlantas()!=null){
 		                 pl = servplant.verPlantas();
-	                	
 		                 int i=1;
+		                 System.out.println(String.format("%-5s %-15s %-25s %-30s", "ID", "Código", "Nombre común", "Nombre científico"));
 	    				for (Planta pl1 : pl) {
 							
-							System.out.println(i + ": " +pl1.getCodigo()+"\t"+ pl1.getNombrecomun() + "\t" + pl1.getNombrecientifico());
+	    					System.out.println(String.format("%-5d %-15s %-25s %-30s", i, pl1.getCodigo(), pl1.getNombrecomun(), pl1.getNombrecientifico()));
 							i++;
 						}
 	                	
-				        } else {
-				            System.out.println("No se ha podido mostrar el listado o la lista está vacía.");
-				            break;
-				        }
+	                	
+	                	
+	                	}else {
+	                		System.out.println("La lista esta vacía");
+	                	break;
+	                	}
 				        String indice;
 				        int indicePlanta;
 				        do {
@@ -479,25 +484,26 @@ public class Principal implements CommandLineRunner {
 				            } while (true);
 				           
 				            if (!codigos.isEmpty()) {
-				                for (String c : codigos) {
-				                    List<Ejemplar> ejemplares = new ArrayList<Ejemplar>();
-				                    ejemplares=servejemplar.verEjemplares();
-				                    plantas = servplant.verPlantas();
-				                    for(Planta pln:plantas) {
-				                    	if(pln.getCodigo().equals(c)){
-
-				                    
-				                    if (ejemplares.isEmpty()) {
-				                        System.out.println("\nLa planta con código " + c + " se encuentra sin ejemplares");
-				                    } else {
-				                        System.out.println("\nEjemplares con código de planta " + c + ":");
-				                        for (Ejemplar ejmp : ejemplares) {
-				                            System.out.println(ejmp.getId()+" "+ejmp.getNombre());
-				                        }
-				                    }
-				                }}
+				            	for (String c : codigos) {
+				            	    
+				            	    List<Ejemplar> ejemplares = servejemplar.verEjemplaresPorCodigoPlanta(c);
+				            	    plantas = servplant.verPlantas();
+				            	    
+				            	    for (Planta pln : plantas) {
+				            	     
+				            	        if (pln.getCodigo().equals(c)) {
+				            	            if (ejemplares.isEmpty()) {
+				            	                System.out.println("\nLa planta con código " + c + " se encuentra sin ejemplares");
+				            	            } else {
+				            	                System.out.println("\nEjemplares con código de planta " + c + ":");
+				            	                for (Ejemplar ejmp : ejemplares) {
+				            	                    System.out.println(ejmp.getId() + "  " + ejmp.getNombre());
+				            	                }
+				            	            }
+				            	        }
+				            	    }
+				            	}
 				            }
-				            }  
 				        } while(indicePlanta == 9999);
 				        break;
 				    
@@ -538,7 +544,7 @@ public class Principal implements CommandLineRunner {
 							if (servejemplar.existeEjemplar(idEjem)) {
 								try {
 									if (servmensaje.filtrarMensajePorEjemplar(Ejemp) == null
-											||! servmensaje.filtrarMensajePorEjemplar(Ejemp).isEmpty()) {
+											|| servmensaje.filtrarMensajePorEjemplar(Ejemp).isEmpty()) {
 
 										System.out.println("Ese ejemplar no tiene mensajes asociados");
 									} else {
@@ -562,253 +568,221 @@ public class Principal implements CommandLineRunner {
 						break;
 						
 				    case 4:
-				    	Long idEjempl=-3L;
-				    	String idEjemStr2="";
-						String codigoEjemplar;
-						Ejemplar ejmpl=new Ejemplar();
-						List<Ejemplar> ejemplares2 = new ArrayList<Ejemplar>();
-						int k = 1;
-						int indiceCodEj = 0;
-						if (servejemplar.verEjemplares() != null
-								&& !servejemplar.verEjemplares().isEmpty()) {
+				    	Long idjmp = -5L;
+				    	String codigoEjemplar;
+				    	Ejemplar ejmpl = new Ejemplar();
+				    	List<Ejemplar> ejemplares2 = new ArrayList<>();
+				    	int k = 1;
+				    	int indiceCodEj = 0;
 
-							ejemplares2 = servejemplar.verEjemplares();
-							for (Ejemplar c : ejemplares2) {
-								System.out.println(k + ".  id: " + c.getId() + "  nombre: " + c.getNombre());
-								k++;
-							}
+				    	if (servejemplar.verEjemplares() != null && !servejemplar.verEjemplares().isEmpty()) {
 
-							System.out.println("\nDame un indice (NUMERO DE LISTA) para ver crear un mensaje asociado a ese ejemplar: (9999 para salir)");
-						;
-						codigoEjemplar = in.nextLine().trim();
-		if(codigoEjemplar.equals("9999")) {
-			break;
-		}
-						try {
-							indiceCodEj=Integer.parseInt(codigoEjemplar);
-							idEjempl = ejemplares2.get(indiceCodEj - 1).getId();
-							 ejmpl = ejemplares2.get(indiceCodEj - 1);
-						}catch(Exception e) {
-							if(indiceCodEj!=9999) {
-								System.out.println("Error: el indice debe de ser un numero y dentro del rango");
-								continue;
-						}
-						}
-						try {
-						if (servejemplar.existeEjemplar(idEjempl)) {
-							
-							Long idej = Long.parseLong(codigoEjemplar);
-							LocalDateTime h=LocalDateTime.now();
-							Mensaje ms = new Mensaje(h,servmensaje.generarMensaje(idej, h),persona,ejmpl);
-									
-							
-							if (servmensaje.insertarMensaje(ms)) {
-								System.out.println("Mensaje generado y almacenado con éxito: " + ms.getMensaje());
-							} else {
-								System.out.println("No se ha podido insertar el mensaje");
-												
-							}
-						} else
-							System.out.println("Codigo no valido");
-						}catch(Exception e) {
-							e.getMessage();
-							continue;
-						}
+				    	    ejemplares2 = servejemplar.verEjemplares();
+				    	    for (Ejemplar c : ejemplares2) {
+				    	        System.out.println(k + ".  id: " + c.getId() + "  nombre: " + c.getNombre());
+				    	        k++;
+				    	    }
 
+				    	    System.out.println("\nDame un índice (NUMERO DE LISTA) para ver crear un mensaje asociado a ese ejemplar: (9999 para salir)");
+				    	    codigoEjemplar = in.nextLine().trim();
 
-							}else {System.out.println("No se han encontrado ejemplares");}
-						
-				    	
-				    	break;
+				    	    if (codigoEjemplar.equals("9999")) {
+				    	        return; 
+				    	    }
+
+				    	    try {
+				    	        indiceCodEj = Integer.parseInt(codigoEjemplar);
+
+				    	        if (indiceCodEj > 0 && indiceCodEj <= ejemplares2.size()) {
+				    	            ejmpl = ejemplares2.get(indiceCodEj - 1);
+				    	            idjmp = ejmpl.getId();
+				    	            System.out.println("Ejemplar seleccionado: " + ejmpl.getNombre());
+				    	        } else {
+				    	            System.out.println("Error: El índice ingresado no es válido. Debe estar entre 1 y " + ejemplares2.size());
+				    	            continue; 
+				    	        }
+
+				    	        if (servejemplar.existeEjemplar(idjmp)) {
+				    	            LocalDateTime h = LocalDateTime.now();
+				    	            String fechaformated= h.format(formatter);
+				    	            Mensaje ms = new Mensaje(h, servmensaje.generarMensaje(persona.getId(), fechaformated), persona, ejmpl);
+
+				    	            if (servmensaje.insertarMensaje(ms)) {
+				    	                System.out.println("Mensaje generado y almacenado con éxito: " + ms.getMensaje());
+				    	            } else {
+				    	                System.out.println("No se ha podido insertar el mensaje");
+				    	            }
+				    	        } else {
+				    	            System.out.println("No se han encontrado ejemplares");
+				    	        }
+
+				    	    } catch (NumberFormatException e) {
+				    	        System.out.println("Error: Debes ingresar un número válido.");
+				    	    } catch (Exception e) {
+				    	        e.printStackTrace();
+				    	    }
+
+				    	} else {
+				    	    System.out.println("No se han encontrado ejemplares");
+				    	}
+break;
 				    case 5:
-				    	do {
+				        boolean subMenuActivo = true;
+				        do {
+				            System.out.println("\n\tSeleccione una opción:\n");
+				            System.out.println("\t1.  Filtrar por usuario.\n");
+				            System.out.println("\t2.  Filtrar por tipoplanta.\n");
+				            System.out.println("\t3.  Filtrar por Fechas.\n");
+				            System.out.println("\t9999.  Volver.\n");
 
-							System.out.println("\n\tSeleccione una opción:\n");
-							System.out.println("\t1.  Filtrar por usuario.\n");
-							System.out.println("\t2.  Filtrar por tipoplanta.\n");
-							System.out.println("\t3.  Filtrar por Fechas.\n");
-							System.out.println("\t9999.  Volver.\n");
-							opcion = in.nextLine().trim();
-							if (!opcion.matches("\\d+")) {  
+				            opcion = in.nextLine().trim();
+
+				            if (!opcion.matches("\\d+")) {  
 				                System.out.println("Entrada no válida. Por favor, introduzca solo un número sin espacios.");
 				                continue;
 				            }
-							try {
 
-								opcionInt = Integer.parseInt(opcion.trim());
+				            try {
+				                opcionInt = Integer.parseInt(opcion.trim());
+				            } catch (NumberFormatException e) {
+				                opcionInt = -1; // Valor fuera de rango para manejar el error en la validación
+				            }
 
-							} catch (NumberFormatException e) {
+				            if (opcionInt == 9999) {
+				                System.out.println("Volviendo...");
+				                subMenuActivo = false; 
+				                break;
+				            } else if (opcionInt < 1 || opcionInt > 3) {
+				                System.out.println("Opción incorrecta. Por favor, elige una opción entre 1 y 3, o 9999 para volver.");
+				                continue;
+				            }
 
-								opcionInt = -1;
-							}
+				            switch (opcionInt) {
+				                case 1: // Filtrar por usuario
+				                    List<Persona> users = servpersona.verPersonas();
+				                    if (users == null || users.isEmpty()) {
+				                        System.out.println("No hay usuarios disponibles.");
+				                        break;
+				                    }
 
-							if (opcionInt == 9999) {
-								System.out.println("Volviendo...");
-								
-								
-								break;
-							} else if (opcionInt < 1 || opcionInt > 3) {
-								System.out.println("Opción incorrecta.");
-								continue;
-							}
+				                    System.out.println("Lista de usuarios:");
+				                    int userIndex = 1;
+				                    for (Persona user : users) {
+				                        System.out.println(userIndex + ": " + user.getId() + "\t" + user.getNombre() + "\t" + user.getEmail());
+				                        userIndex++;
+				                    }
 
-							switch (opcionInt) {
-							
-							
-							case 1:
-								List<Persona> users =new ArrayList<Persona>();
-								List<Mensaje> mensajespersona=new ArrayList<Mensaje>();
-								if (servpersona.verPersonas()!= null && !servpersona.verPersonas().isEmpty()) {
-								users = servpersona.verPersonas();
-								
-								int l = 0;
+				                    System.out.println("Dame el número (índice) de usuario sobre el que quieres ver mensajes:");
+				                    String indic = in.nextLine().trim();
 
-								for (Persona u : users) {
+				                    try {
+				                        int indP = Integer.parseInt(indic);
+				                        if (indP < 1 || indP > users.size()) {
+				                            System.out.println("Índice fuera de rango.");
+				                            break;
+				                        }
 
-									System.out.println(l + ": " + u.getId() + "\t" + u.getNombre() + "\t" + u.getEmail());
-									l++;
-								}
-								} else {
-										System.out.println("No se ha podido mostrar el listado o la lista está vacía.");
-										break;
-								 }
-								System.out.println("Dame el numero (indice) de usuario sobre el que quiere ver mensajes:");
-								String indic = in.nextLine().trim();
-								try {
-									int indP = Integer.parseInt(indic);
+				                        Persona selectedUser = users.get(indP - 1);
+				                        List<Mensaje> mensajespersona = servmensaje.filtrarMensajePorPersona(selectedUser);
 
-									if (!servpersona.existePersona(users.get(indP).getId())) {
+				                        if (mensajespersona == null || mensajespersona.isEmpty()) {
+				                            System.out.println("No hay mensajes para este usuario.");
+				                        } else {
+				                            System.out.println("Mensajes del usuario con ID " + selectedUser.getId() + ":");
+				                            for (Mensaje mensaje : mensajespersona) {
+				                                System.out.println(mensaje.getMensaje());
+				                            }
+				                        }
+				                    } catch (NumberFormatException e) {
+				                        System.out.println("Entrada no válida. Por favor, introduce un número.");
+				                    }
+				                    break;
 
-										System.out.println("No existe persona con ese codigo");
+				                case 2: // Filtrar por tipoplanta
+				                    List<Planta> plantass = servplant.verPlantas();
+				                    if (plantass == null || plantass.isEmpty()) {
+				                        System.out.println("No hay plantas disponibles.");
+				                        break;
+				                    }
 
-									} else {
-										
-										if(servmensaje.filtrarMensajePorPersona(users.get(indP))==null && servmensaje.filtrarMensajePorPersona(users.get(indP)).isEmpty()) {
-											System.out.println("No se ha podido mostrar el listado o la lista está vacía.");
-										}else {
-											mensajespersona=servmensaje.filtrarMensajePorPersona(users.get(indP));
-											System.out.println("Mensajes del usuario con id " + users.get(indP).getId());
-											for (Mensaje mns : mensajespersona) {
-												System.out.println(mns);
-										}
-									}}
-								} catch (NumberFormatException e) {
-									System.out.println("No se ha podido obtener los mensjaes. Id introuducido no valido" + e.getMessage());
-								} catch (Exception e) {
-									System.out.println("Solo se pueden elegir dentro del indice");
+				                    System.out.println(String.format("%-5s %-15s %-25s %-30s", "ID", "Código", "Nombre común", "Nombre científico"));
+				                    int plantaIndex = 1;
+				                    for (Planta planta : plantass) {
+				                        System.out.println(String.format("%-5d %-15s %-25s %-30s", plantaIndex, planta.getCodigo(), planta.getNombrecomun(), planta.getNombrecientifico()));
+				                        plantaIndex++;
+				                    }
 
-								}
-							break;
-							
-							case 2:
-				
-								int h = 1;
-								List<Mensaje> mensajesplanta =new ArrayList <Mensaje>();
-								List<Planta> plantas4 = new ArrayList <Planta>();
-								if (servplant.verPlantas() != null && !servplant.verPlantas().isEmpty()) {
+				                    System.out.println("Dame el número (índice) de la planta sobre la que quieres ver mensajes:");
+				                    String plantaInput = in.nextLine().trim();
 
-							
+				                    try {
+				                        int plantaInd = Integer.parseInt(plantaInput);
+				                        if (plantaInd < 1 || plantaInd > plantass.size()) {
+				                            System.out.println("Índice fuera de rango.");
+				                            break;
+				                        }
 
-							
-									 plantas4= servplant.verPlantas();
-									for (Planta plnts : plantas4) {
-										System.out.println(h+"   "+plnts);
-										h++;
-									}
-									
-								} else {
-									System.out.println("No se ha podido mostrar el listado o la lista está vacía.");
-									break;
-								}
-								
-								System.out.println("Dame el numero (indice) de la planta sobre el que quieres ver mensajes");
-								String index = in.nextLine().trim();
-								try {
-									int indce = Integer.parseInt(index);
+				                        Planta selectedPlanta = plantass.get(plantaInd - 1);
+				                        List<Mensaje> mensajesplanta = servmensaje.filtrarMensajePorPlanta(selectedPlanta);
 
-									if (servplant.existeCodigoPlanta(plantas4.get(indce - 1).getCodigo())) {
+				                        if (mensajesplanta == null || mensajesplanta.isEmpty()) {
+				                            System.out.println("No hay mensajes para esta planta.");
+				                        } else {
+				                            System.out.println("Mensajes de la planta con código " + selectedPlanta.getCodigo() + ":");
+				                            for (Mensaje mensaje : mensajesplanta) {
+				                                System.out.println(mensaje.getMensaje());
+				                            }
+				                        }
+				                    } catch (NumberFormatException e) {
+				                        System.out.println("Entrada no válida. Por favor, introduce un número.");
+				                    }
+				                    break;
 
-								 if(servmensaje.filtrarMensajePorPlanta(plantas4.get(indce - 1))!=null && !servmensaje.filtrarMensajePorPlanta(plantas4.get(indce - 1)).isEmpty()) {
-									 mensajesplanta= servmensaje.filtrarMensajePorPlanta(plantas4.get(indce - 1));
-									 System.out.println("Mensades de la planta con codigo" + plantas4.get(indce - 1).getCodigo());
-										for (Mensaje msjs : mensajesplanta) {
-											System.out.println(msjs);
-										}
-									}
-									}else {
-										System.out.println("No se a podido mostras orque la lista esta vacia");
-									}
-									
-								} catch (NumberFormatException e) {
-									System.out.println(
-											"No ha sido posible realizar la operacion, el indice debe de ser un numero");
-									break;
+				                case 3: // Filtrar por fechas
+				                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				                    LocalDate fechaInicio = null, fechaFin = null;
 
-								} 
-							case 3:
-								List<Mensaje> mensajesfecha=new ArrayList<Mensaje>();
-								LocalDate fechaInicio = null;
-								LocalDate fechaFin = null;
-								LocalDate fechaActual = LocalDate.now();
-								LocalDateTime fechai,fechaf,fehcaA; 
-								String fechaInicioStr="",fechaFinStr="";
-								DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				                    try {
+				                        System.out.println("Introduce la fecha de inicio (formato yyyy-MM-dd): 999 para salir:");
+				                        String fechaInicioStr = in.nextLine().trim();
+				                        if ("999".equals(fechaInicioStr)) break;
 
-								try {
-									System.out.println("Introduce la fecha de inicio (formato yyyy-MM-dd)  999 para salir:");
-									 fechaInicioStr = in.nextLine().trim();
-									if (fechaInicioStr.equals("999")){
-										break;
-									}
-									fechaInicio = LocalDate.parse(fechaInicioStr, formatter);
+				                        fechaInicio = LocalDate.parse(fechaInicioStr, formatter);
 
-									System.out.println("Introduce la fecha de fin (formato yyyy-MM-dd): 999 para salir");
-									 fechaFinStr = in.nextLine().trim();
-									if (fechaInicioStr.equals("999")){
-										break;
-									}
-									fechaFin = LocalDate.parse(fechaFinStr, formatter);
-									
-									//Converir a LolcalDateTime para poder usarlo en filtrarMensajeRangoFechas
-									
-								    LocalDateTime fechaInicioDateTime = fechaInicio.atStartOfDay(); 
-								    LocalDateTime fechaFinDateTime = fechaFin.atTime(23, 59, 59);  
-								    
-									if (servmensaje.verificarfecha(fechaInicio, fechaFin,fechaActual)==-1) {
-										
-										 System.out.println("La fecha de inicio debe ser anterior o igual a la fecha de fin. Intenta de nuevo.");
-									}if(servmensaje.verificarfecha(fechaInicio, fechaFin,fechaActual)==-2){
-										
-										 System.out.println("La fecha de inicio no puede ser posterior al día actual. Intenta de nuevo.");
-									}if(servmensaje.verificarfecha(fechaInicio, fechaFin,fechaActual)==1) {
-										
-										 if(servmensaje.filtrarMensajeRangoFechas(fechaInicioDateTime, fechaFinDateTime)!=null
-												 && !servmensaje.filtrarMensajeRangoFechas(fechaInicioDateTime, fechaFinDateTime).isEmpty()) {
-										mensajesfecha=servmensaje.filtrarMensajeRangoFechas(fechaInicioDateTime, fechaFinDateTime);
-										System.out.println("Rango de fechas elegido: " + fechaInicio + " a " + fechaFin);
-										for (Mensaje ms : mensajesfecha) {
-											System.out.println(ms);
-										}
-									
-								}else {
-									System.out.println("No hay mensajes para el rango de fechas elegido");
-								}
-									}	 
-									} catch (NumberFormatException e) {
-									System.out.println("Error al convertir el id de usuario a número: " + e.getMessage());
-								} catch (DateTimeParseException e) {
-									System.out.println("Formato de fecha no válido. Debes de usar el formato yyyy-MM-dd.");
+				                        System.out.println("Introduce la fecha de fin (formato yyyy-MM-dd): 999 para salir:");
+				                        String fechaFinStr = in.nextLine().trim();
+				                        if ("999".equals(fechaFinStr)) break;
 
-								}
+				                        fechaFin = LocalDate.parse(fechaFinStr, formatter);
 
+				                        if (fechaInicio.isAfter(fechaFin)) {
+				                            System.out.println("La fecha de inicio no puede ser posterior a la fecha de fin.");
+				                            break;
+				                        }
 
-								break;
-							
-							}
+				                        List<Mensaje> mensajesFecha = servmensaje.filtrarMensajeRangoFechas(fechaInicio.atStartOfDay(), fechaFin.atTime(23, 59, 59));
+
+				                        if (mensajesFecha == null || mensajesFecha.isEmpty()) {
+				                            System.out.println("No hay mensajes en el rango de fechas seleccionado.");
+				                        } else {
+				                            System.out.println("Mensajes entre " + fechaInicio + " y " + fechaFin + ":");
+				                            for (Mensaje mensaje : mensajesFecha) {
+				                                System.out.println(mensaje.getMensaje());
+				                            }
+				                        }
+				                    } catch (DateTimeParseException e) {
+				                        System.out.println("Formato de fecha no válido. Debes usar el formato yyyy-MM-dd.");
+				                    }
+				                    break;
+
+				                default:
+				                    System.out.println("Opción no válida.");
+				            }
+				        } while (subMenuActivo);
+
+				        break;
 				    	
 				    	
-				    	
-				    	}while(opcion.equals("9999"));
 					case 99:
 						break;
 					default:
@@ -996,30 +970,7 @@ public class Principal implements CommandLineRunner {
 		        System.out.println(" - Ana\n");
 		    }
 		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
+
 		    private int obtenerOpcionValida() {
 		        while (true) {
 		            if (in.hasNextInt()) {

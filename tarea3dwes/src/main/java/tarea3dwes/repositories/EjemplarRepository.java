@@ -14,4 +14,5 @@ public interface EjemplarRepository extends JpaRepository <Ejemplar,Long> {
 
 	int countByNombreStartingWith(String nombreComun);
 	   List<Ejemplar> findByPlanta(Planta planta);
+
 }

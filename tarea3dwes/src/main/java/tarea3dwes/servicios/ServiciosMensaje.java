@@ -25,23 +25,20 @@ public class ServiciosMensaje {
 	@Autowired
 	EjemplarRepository ejemplarrepos;
 	
-	public String generarMensaje(Long id,LocalDateTime hoy) {
+	public String generarMensaje(Long id,String hoy) {
 		Optional<Persona> optionalPersona = personarepos.findById(id);
 		  
 		        Persona per = optionalPersona.get();  
 		        Long personaId = per.getId();  
-		        return "Fecha: " + hoy.toString()+"  Persona: "+personaId;
+		        return "Fecha: " + hoy+"  Persona: "+personaId;
 		    
 		  
     }
 	public boolean insertarMensaje(Mensaje m) {
-	    try {
-	        mensajerepos.saveAndFlush(m);
-	        return true;
-	    } catch (DataIntegrityViolationException e) {
+		return mensajerepos.saveAndFlush(m) != null;
 	        
-	        return false;
-	    }
+	        
+	    
 	}
 	public List<Mensaje> filtrarMensajePorEjemplar(Ejemplar ej){
 		return mensajerepos.findByEjemplar(ej);
