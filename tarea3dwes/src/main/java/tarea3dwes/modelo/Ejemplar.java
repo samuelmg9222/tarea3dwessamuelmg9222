@@ -3,6 +3,7 @@ package tarea3dwes.modelo;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -34,8 +35,7 @@ public class Ejemplar implements Serializable{
 	@JoinColumn(name="idejemplar")
 	private List<Mensaje> mensjaes=new LinkedList<Mensaje>();
 	
-	 @OneToMany(mappedBy = "ejemplar", cascade = CascadeType.ALL)
-	    private List<Seguimiento> seguimientos;
+
 	
 	
 	
@@ -78,9 +78,30 @@ public class Ejemplar implements Serializable{
 		this.planta = planta;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, mensjaes, nombre, planta);
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Ejemplar other = (Ejemplar) obj;
+		return Objects.equals(id, other.id) && Objects.equals(mensjaes, other.mensjaes)
+				&& Objects.equals(nombre, other.nombre) && Objects.equals(planta, other.planta);
+	}
+
+	@Override
+	public String toString() {
+		return "Ejemplar [id=" + id + ", nombre=" + nombre + ", planta=" + planta + ", mensjaes=" + mensjaes + "]";
+	}
+
+
 	
 	
 	

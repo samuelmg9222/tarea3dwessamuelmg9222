@@ -35,8 +35,7 @@ public class Persona implements Serializable {
 	  @OneToOne(mappedBy = "persona", cascade = CascadeType.ALL)
 	    private Credenciales credencial;
 
-	 @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL)
-	    private List<Seguimiento> seguimientos;
+	
 
 	 
 	 
@@ -91,13 +90,7 @@ public class Persona implements Serializable {
 		this.credencial = credencial;
 	}
 
-	public List<Seguimiento> getSeguimientos() {
-		return seguimientos;
-	}
-
-	public void setSeguimientos(List<Seguimiento> seguimientos) {
-		this.seguimientos = seguimientos;
-	}
+	
 
 	@Override
 	public int hashCode() {

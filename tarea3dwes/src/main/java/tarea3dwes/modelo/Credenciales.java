@@ -100,6 +100,12 @@ public class Credenciales implements Serializable{
 					&& Objects.equals(persona, other.persona) && Objects.equals(usuario, other.usuario);
 		}
 
+		@Override
+		public String toString() {
+			return "Credenciales [id=" + id + ", usuario=" + usuario + ", password=" + password + ", persona=" + persona
+					+ "]";
+		}
+
 		
 
 }

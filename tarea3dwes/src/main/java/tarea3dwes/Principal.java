@@ -19,7 +19,28 @@ import tarea3dwes.servicios.*;
 
 
 
-//NUESTRA CAPA DE VISTA
+/*
+ *
+ * En esta tarea, se implementa únicamente una capa de vista (View).
+ * Esta capa se encarga de interactuar con el usuario mediante:
+ * - Mostrar información al usuario utilizando System.out.println.
+ * - Solicitar datos al usuario desde la consola.
+ *
+ * Organización de las capas del proyecto:
+ * 1. **Vista (View)**: 
+ *    - Aquí se implementan los métodos que gestionan la interacción con el usuario.
+ *    - Los métodos de esta capa llaman a los métodos de la capa de servicios.
+ * 2. **Servicios (Service)**:
+ *    - Esta capa contiene la lógica de negocio y sirve como puente entre 
+ *      la vista y el repositorio.
+ *    - En esta capa se invocan los métodos definidos en la capa de repositorio.
+ * 3. **Repositorio (Repository)**:
+ *    - Gestiona la interacción directa con la base de datos (BDD).
+ *    - Contiene los métodos para realizar operaciones CRUD.
+ *
+ */
+
+
 public class Principal implements CommandLineRunner {
 	 private Scanner in = new Scanner(System.in);
 	@Autowired
@@ -43,6 +64,9 @@ public class Principal implements CommandLineRunner {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 	Persona persona;
 	String username;
+	
+	
+	
 		 public void mostrarMenuPrincipal() {
 		        int opcionint;
 		        do {
@@ -95,7 +119,7 @@ public class Principal implements CommandLineRunner {
 		                	        } else if (tipouser == 1) {
 		                	        	Credenciales cr= servcredencial.encontrarCredenciales(username);
 				                	       persona = cr.getPersona();
-		                	        	GestionDePlantas();
+				                	       mostrarMenuGestionEjemplares(persona.getId());
 		                	        } else if (tipouser == 0) {
 		                	        	Credenciales cr= servcredencial.encontrarCredenciales(username);
 				                	       persona = cr.getPersona();
@@ -122,7 +146,7 @@ public class Principal implements CommandLineRunner {
 		            System.out.println("\t1 - Visualizar plantas\n");
 		            System.out.println("\t2 - Insertar planta\n");
 		            System.out.println("\t3 - Modificar planta\n");
-		            System.out.println("\t99 - Volver atrás\n");
+		            System.out.println("\t99 - Volver\n");
 		            System.out.print("\tSelecciona una opción: ");
 		             opcionint = obtenerOpcionValida();
 
@@ -310,7 +334,7 @@ public class Principal implements CommandLineRunner {
 		    public void mostrarMenuGestionEjemplares(Long idpersona) {
 
 				
-				System.out.println("Gestion de ejemplares");
+				System.out.println("Gestion de ejemplares "+"("+username+")");
 				String opcion = "";
 				int opcionInt = -1;
 				do {
@@ -320,7 +344,7 @@ public class Principal implements CommandLineRunner {
 				    System.out.println("\t3. Ver mensajes para ejemplar .\n");
 				    System.out.println("\t4. Crear Mensaje.\n");
 				    System.out.println("\t5. Filtrar mensajes.\n");
-				    System.out.println("\t99. Volver al menú del administrador\n");
+				    System.out.println("\t99. Volver\n");
 
 				    opcion = in.nextLine().trim();
 				    if (!opcion.matches("\\d+")) { 
@@ -504,7 +528,7 @@ public class Principal implements CommandLineRunner {
 				            	    }
 				            	}
 				            }
-				        } while(indicePlanta == 9999);
+				        } while(!indice.equals("9999"));
 				        break;
 				    
 				    case 3:
@@ -549,7 +573,7 @@ public class Principal implements CommandLineRunner {
 										System.out.println("Ese ejemplar no tiene mensajes asociados");
 									} else {
 										mensajesAsociados = servmensaje.filtrarMensajePorEjemplar(Ejemp);
-										System.out.println("Mensajes asociados encontrados: " + mensajesAsociados.size());
+										System.out.println("Mensajes asociados encontrados para el ejemplar: "+ ejemplares.get(opc - 1).getNombre() +": "+ mensajesAsociados.size());
 										for (Mensaje m : mensajesAsociados) {
 											System.out.println(m.getMensaje());
 										}
@@ -645,7 +669,7 @@ break;
 				            try {
 				                opcionInt = Integer.parseInt(opcion.trim());
 				            } catch (NumberFormatException e) {
-				                opcionInt = -1; // Valor fuera de rango para manejar el error en la validación
+				                opcionInt = -1; 
 				            }
 
 				            if (opcionInt == 9999) {
@@ -658,7 +682,7 @@ break;
 				            }
 
 				            switch (opcionInt) {
-				                case 1: // Filtrar por usuario
+				                case 1: 
 				                    List<Persona> users = servpersona.verPersonas();
 				                    if (users == null || users.isEmpty()) {
 				                        System.out.println("No hay usuarios disponibles.");
@@ -688,9 +712,11 @@ break;
 				                        if (mensajespersona == null || mensajespersona.isEmpty()) {
 				                            System.out.println("No hay mensajes para este usuario.");
 				                        } else {
+				                        	int i=1;
 				                            System.out.println("Mensajes del usuario con ID " + selectedUser.getId() + ":");
 				                            for (Mensaje mensaje : mensajespersona) {
-				                                System.out.println(mensaje.getMensaje());
+				                                System.out.println(i+":  "+mensaje.getMensaje()+"  Ejemplar:"+mensaje.getEjemplar().getNombre());
+				                            i++;
 				                            }
 				                        }
 				                    } catch (NumberFormatException e) {
@@ -698,7 +724,7 @@ break;
 				                    }
 				                    break;
 
-				                case 2: // Filtrar por tipoplanta
+				                case 2: 
 				                    List<Planta> plantass = servplant.verPlantas();
 				                    if (plantass == null || plantass.isEmpty()) {
 				                        System.out.println("No hay plantas disponibles.");
@@ -728,9 +754,11 @@ break;
 				                        if (mensajesplanta == null || mensajesplanta.isEmpty()) {
 				                            System.out.println("No hay mensajes para esta planta.");
 				                        } else {
+				                        	int i=1;
 				                            System.out.println("Mensajes de la planta con código " + selectedPlanta.getCodigo() + ":");
 				                            for (Mensaje mensaje : mensajesplanta) {
-				                                System.out.println(mensaje.getMensaje());
+				                                System.out.println(i+":  "+mensaje.getMensaje()+"  Ejemplar:"+mensaje.getEjemplar().getNombre());
+				                            i++;
 				                            }
 				                        }
 				                    } catch (NumberFormatException e) {
@@ -738,7 +766,7 @@ break;
 				                    }
 				                    break;
 
-				                case 3: // Filtrar por fechas
+				                case 3: 
 				                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 				                    LocalDate fechaInicio = null, fechaFin = null;
 
@@ -766,8 +794,10 @@ break;
 				                            System.out.println("No hay mensajes en el rango de fechas seleccionado.");
 				                        } else {
 				                            System.out.println("Mensajes entre " + fechaInicio + " y " + fechaFin + ":");
+				                            int i=1;
 				                            for (Mensaje mensaje : mensajesFecha) {
-				                                System.out.println(mensaje.getMensaje());
+				                                System.out.println(i+":  "+mensaje.getMensaje()+"  Ejemplar:"+mensaje.getEjemplar().getNombre());
+				                           i++;
 				                            }
 				                        }
 				                    } catch (DateTimeParseException e) {
