@@ -269,7 +269,7 @@ public class VistaEjemplares {
 			            	            } else {
 			            	                System.out.println("\nEjemplares con código de planta " + c + ":");
 			            	                for (Ejemplar ejmp : ejemplares) {
-			            	                    System.out.println(ejmp.getId() + "  " + ejmp.getNombre());
+			            	                    System.out.println("id: "+ejmp.getId() + "  " + ejmp.getNombre());
 			            	                }
 			            	            }
 			            	        }
@@ -322,8 +322,10 @@ public class VistaEjemplares {
 								} else {
 									mensajesAsociados = servmensaje.filtrarMensajePorEjemplar(Ejemp);
 									System.out.println("Mensajes asociados encontrados para el ejemplar: "+ ejemplares.get(opc - 1).getNombre() +": "+ mensajesAsociados.size());
+									int h = 1;
 									for (Mensaje m : mensajesAsociados) {
-										System.out.println(m.getMensaje());
+										System.out.println(h+": "+ejemplares.get(opc - 1).getNombre()+": "+m.getMensaje()+"  Nombre: "+(m.getPersona().getNombre().toUpperCase())+"  Email: "+m.getPersona().getEmail().toUpperCase());
+										h++;
 									}
 								}
 							} catch (Exception e) {
@@ -342,6 +344,7 @@ public class VistaEjemplares {
 			    case 4:
 			    	Long idjmp = -5L;
 			    	String codigoEjemplar;
+			    	String mensajeIntroducido;
 			    	Ejemplar ejmpl = new Ejemplar();
 			    	List<Ejemplar> ejemplares2 = new ArrayList<>();
 			    	int k = 1;
@@ -371,31 +374,40 @@ public class VistaEjemplares {
 			    	            System.out.println("Ejemplar seleccionado: " + ejmpl.getNombre());
 			    	        } else {
 			    	            System.out.println("Error: El índice ingresado no es válido. Debe estar entre 1 y " + ejemplares2.size());
-			    	            continue; 
+			    	            continue;
 			    	        }
 
 			    	        if (servejemplar.existeEjemplar(idjmp)) {
 			    	            LocalDateTime h = LocalDateTime.now();
-			    	            String fechaformated= h.format(formatter);
-			    	            Mensaje ms = new Mensaje(h, servmensaje.generarMensaje(per.getId(), fechaformated), per, ejmpl);
+			    	           
+			    	            System.out.println("Introduce el mensaje que desea introducir");
+			    	            mensajeIntroducido = in.nextLine().trim();
 
-			    	            if (servmensaje.insertarMensaje(ms)) {
-			    	                System.out.println("Mensaje generado y almacenado con éxito: " + ms.getMensaje());
-			    	            } else {
-			    	                System.out.println("No se ha podido insertar el mensaje");
+			    	            int verif = servmensaje.verificarMensajeIntroducido(mensajeIntroducido);
+
+			    	            if (verif == -1) {
+			    	                System.out.println("No puede dejar el mensaje vacío");
+			    	            } else if (verif == -2) {
+			    	                System.out.println("La longitud no es válida. Debe de ser de 5 a 100 caracteres");
+			    	            } else if (verif == -3) {
+			    	                System.out.println("Error: Solamente se pueden introducir espacios, letras sin tildes, números, @ y /");
+			    	            } else if (verif == 1) {
+			    	                Mensaje ms = new Mensaje(h, mensajeIntroducido, per, ejmpl);
+
+			    	                if (servmensaje.insertarMensaje(ms)) {
+			    	                    System.out.println("Mensaje generado y almacenado con éxito: " + ms.getMensaje());
+			    	                } else {
+			    	                    System.out.println("No se ha podido insertar el mensaje");
+			    	                }
 			    	            }
 			    	        } else {
 			    	            System.out.println("No se han encontrado ejemplares");
 			    	        }
-
 			    	    } catch (NumberFormatException e) {
 			    	        System.out.println("Error: Debes ingresar un número válido.");
 			    	    } catch (Exception e) {
 			    	        e.printStackTrace();
 			    	    }
-
-			    	} else {
-			    	    System.out.println("No se han encontrado ejemplares");
 			    	}
 break;
 			    case 5:

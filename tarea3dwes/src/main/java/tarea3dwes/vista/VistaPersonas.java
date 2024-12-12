@@ -17,8 +17,8 @@ public class VistaPersonas {
 	@Autowired
 	ServiciosCredencial servcredencial;
     public void mostrarMenuGestionPersonas(Persona per) {
-        Scanner in = new Scanner(System.in);
-        System.out.println("Gestion de ejemplares");
+       
+        System.out.println("\n\tGestion de Empleados");
         String opcion = "";
         int opcionInt = -1;
 

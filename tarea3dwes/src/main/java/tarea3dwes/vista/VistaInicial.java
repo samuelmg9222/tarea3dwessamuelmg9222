@@ -23,17 +23,17 @@ public class VistaInicial {
 	
 	@Autowired
 	ServiciosPlanta servplant;
-	@Autowired
-	ServiciosEjemplar servejemplar;
+	
 	@Autowired
 	ServiciosCredencial servcredencial;
-	@Autowired
-	ServiciosMensaje servmensaje;
+	
 	@Autowired
 	ServiciosPersona servpersona;
+	
 	@Autowired
 	 @Lazy
 	VistaPlantas vistaplantas;
+	
 	@Autowired
 	 @Lazy
 	VistaPersonas vistapersonas;

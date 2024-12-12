@@ -3,6 +3,7 @@ package tarea3dwes.servicios;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 
@@ -57,5 +58,9 @@ public int verificarPersona(String nombre,String email,String usuario,String con
 public boolean insertarPersona(Persona pers) {
     return personarepos.saveAndFlush(pers) != null;
 }
+public String obtenerNombrePorId(Long id) {
+    return personarepos.findNombreById(id);
+}
+
 }
 

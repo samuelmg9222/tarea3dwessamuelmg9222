@@ -70,7 +70,22 @@ public class ServiciosMensaje {
 		return mensajerepos.findByFechahoraBetween(inicio,fin);
 	}
 
+	public int verificarMensajeIntroducido(String m) {
+	    if (m == null || m.trim().isEmpty()) {
+	        return -1; 
+	    }
 
+	   
+	    if (m.length() < 5 || m.length() > 100) {
+	        return -2; 
+	    }
+
+	    if (!m.matches("[a-zA-Z0-9 ,./:@]*")) {
+	        return -3; 
+	    }
+
+	    return 1; 
+	}
 
 
 
